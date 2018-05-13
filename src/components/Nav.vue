@@ -8,10 +8,10 @@
     text-color="#fff"
     active-text-color="#ffd04b">
     <el-menu-item index="/">首页</el-menu-item>
-    <el-menu-item index="/add">记事</el-menu-item>
-    <el-menu-item index="/wall">记事墙</el-menu-item>
-    <el-menu-item index="/mylist">我的记事</el-menu-item>
-    <el-menu-item index="/about">关于我们</el-menu-item>
+    <!-- <el-menu-item index="/add">记事</el-menu-item> -->
+    <el-menu-item index="/wall">大家说</el-menu-item>
+    <el-menu-item index="/mylist">我的事件</el-menu-item>
+    <!-- <el-menu-item index="/about">关于我们</el-menu-item> -->
   </el-menu>
 </template>
 

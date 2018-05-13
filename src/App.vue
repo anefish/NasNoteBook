@@ -7,17 +7,16 @@
       <el-main>
         <router-view/>
       </el-main>
-      <el-footer>Footer</el-footer>
+      <el-footer>
+        <!-- <i class="el-icon-location"></i> -->
+        <span>Copyright © 2018.区块记事</span>
+      </el-footer>
     </el-container>
   </div>
 </template>
 
 <script>
 import Nav from '@/components/Nav'
-// import Index from '@/components/Index'
-// import Wall from '@/components/Wall'
-// import MyList from '@/components/MyList'
-// import About from '@/components/About'
 
 export default {
   name: 'App',
@@ -33,6 +32,10 @@ export default {
   padding: 0;
 }
 
+html,body {
+  height: 100%;
+}
+
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -40,6 +43,9 @@ export default {
   /* text-align: center;
   color: #2c3e50;
   margin-top: 60px; */
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .el-header, .el-footer {
@@ -52,8 +58,11 @@ export default {
 .el-main {
   background-color: #E9EEF3;
   color: #333;
-  text-align: center;
-  line-height: 160px;
+  /* text-align: center; */
+  /* line-height: 160px; */
+  /* max-height: 800px; */
+  overflow: scroll;
+  flex: 1;
 }
 
 body > .el-container {

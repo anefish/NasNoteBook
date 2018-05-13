@@ -7,6 +7,23 @@
   </head>
   <body>
     <div id="app"></div>
+
+    <script src="static/nebPay.js"></script>
+    <script src="static/nebulas.js"></script>
+    <script type="text/javascript">
+      "use strict";
+
+      var dappAddress = "n1mXfx9kWqS8UdBPukNNT8KtG8oVBJWkGem";
+
+      var nebulas = require("nebulas"),
+          Account = nebulas.Account,
+          neb = new nebulas.Neb();
+      neb.setRequest(new nebulas.HttpRequest("https://testnet.nebulas.io"));
+
+      var NebPay = require("nebpay");     //https://github.com/nebulasio/nebPay
+      var nebPay = new NebPay();
+    </script>
+
     <!-- built files will be auto injected -->
   </body>
 </html>

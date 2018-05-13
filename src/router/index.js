@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Index from '@/components/Index'
+// import Index from '@/components/Index'
 import Add from '@/components/Add'
 import Wall from '@/components/Wall'
 import MyList from '@/components/MyList'
@@ -12,8 +12,9 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'Index',
-      component: Index
+      // name: 'Index',
+      // component: Index
+      redirect: '/add'
     },
     {
       path: '/add',
