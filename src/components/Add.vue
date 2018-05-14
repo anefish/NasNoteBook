@@ -54,6 +54,8 @@ export default {
 
       // 使用nebpay的call接口去调用合约,
       this.serialNumber = window.nebPay.call(to, value, callFunction, callArgs, {
+        // callback: NebPay.config.testnetUrl, //测试网，默认主网
+
         // 设置listener, 处理交易返回信息
         listener: this.cbPush
       })
@@ -63,7 +65,9 @@ export default {
     },
     funcIntervalQuery () {
       // search transaction result from server (result upload to server by app)
-      window.nebPay.queryPayInfo(this.serialNumber)
+      window.nebPay.queryPayInfo(this.serialNumber, {
+        // callback: NebPay.config.testnetUrl, //测试网，默认主网
+      })
         .then(function (resp) {
           // resp is a JSON string
           console.log('tx result: ', resp)

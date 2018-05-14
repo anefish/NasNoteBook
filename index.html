@@ -13,12 +13,16 @@
     <script type="text/javascript">
       "use strict";
 
-      var dappAddress = "n1mXfx9kWqS8UdBPukNNT8KtG8oVBJWkGem";
+      // testnet
+      // var dappAddress = "n1mXfx9kWqS8UdBPukNNT8KtG8oVBJWkGem";
+      // mainnet
+      var dappAddress = "n21GcmNzn9tyZB9JzRWcnLcZZhpoQSHzGSA";
 
       var nebulas = require("nebulas"),
           Account = nebulas.Account,
           neb = new nebulas.Neb();
-      neb.setRequest(new nebulas.HttpRequest("https://testnet.nebulas.io"));
+      // neb.setRequest(new nebulas.HttpRequest("https://testnet.nebulas.io"));
+      neb.setRequest(new nebulas.HttpRequest("https://mainnet.nebulas.io"));
 
       var NebPay = require("nebpay");     //https://github.com/nebulasio/nebPay
       var nebPay = new NebPay();

@@ -36,7 +36,6 @@ export default {
     }
   },
   mounted () {
-    // this.getMyRecords()
     this.getUserRecords()
   },
   methods: {
@@ -78,30 +77,10 @@ export default {
         //   desc: "test goods"
         // },
 
+        // callback: NebPay.config.testnetUrl, //测试网，默认主网
+        
         // set listener for extension transaction result
         listener: this.listener
-      })
-    },
-    getMyRecords () {
-      const from = window.Account.NewAccount().getAddressString()
-      // const from = 'n1MUJXb6imRmTgKeiBYVkU9pYNT2Avhnt7Q'
-      console.log('from: ', from)
-
-      const value = '0'
-      const nonce = '0'
-      const gasPrice = '1000000'
-      const gasLimit = '2000000'
-      const callFunction = 'getRecordsByUser'
-      const callArgs = '[]' // in the form of ["args"]
-      const contract = {
-        'function': callFunction,
-        'args': callArgs
-      }
-
-      window.neb.api.call(from, window.dappAddress, value, nonce, gasPrice, gasLimit, contract).then(function (resp) {
-        console.log('resp------------------->>>: ', JSON.parse(resp.result))
-      }).catch(function (err) {
-        console.log('error: ', err.message)
       })
     }
   }
