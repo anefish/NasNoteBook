@@ -4,11 +4,13 @@ var RecordItem = function (text) {
   if (text) {
     var obj = JSON.parse(text);
     this.from = obj.from;
+    this.userName = obj.userName;
     this.content = obj.content;
     this.isOpen = obj.isOpen;
     this.createTime = obj.createTime;
   } else {
     this.from = "";
+    this.userName = "";
     this.content = "";
     this.isOpen = false;
     this.createTime = new Date();
@@ -73,6 +75,9 @@ NasNoteBookContract.prototype = {
     for (var i = 0; i < this.size; i++) {
       var recordItem = this.allRecords.get(i);
       if (recordItem.isOpen) {
+        if (this.userMap.get(recordItem.from)) {
+          recordItem.userName = this.userMap.get(recordItem.from);
+        }
         openRecords.push(recordItem);
       }
     }
@@ -86,6 +91,9 @@ NasNoteBookContract.prototype = {
     for (var i = 0; i < this.size; i++) {
       var recordItem = this.allRecords.get(i);
       if (recordItem.from === from) {
+        if (this.userMap.get(recordItem.from)) {
+          recordItem.userName = this.userMap.get(recordItem.from);
+        }
         userRecords.push(recordItem);
       }
     }
@@ -94,5 +102,5 @@ NasNoteBookContract.prototype = {
 }
 
 // testnet: n1mXfx9kWqS8UdBPukNNT8KtG8oVBJWkGem
-// mainnet: n21GcmNzn9tyZB9JzRWcnLcZZhpoQSHzGSA
+// mainnet: n1zAnxSTcextSoeqxp6zH1YUhQ5ZUgre2BA
 module.exports = NasNoteBookContract;

@@ -78,7 +78,7 @@ export default {
         // },
 
         // callback: NebPay.config.testnetUrl, //测试网，默认主网
-        
+
         // set listener for extension transaction result
         listener: this.listener
       })

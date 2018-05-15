@@ -7,7 +7,8 @@
     background-color="#545c64"
     text-color="#fff"
     active-text-color="#ffd04b">
-    <el-menu-item index="/">首页</el-menu-item>
+    <el-menu-item index="/" class="logo">区块记事</el-menu-item>
+    <el-menu-item index="/add">首页</el-menu-item>
     <!-- <el-menu-item index="/add">记事</el-menu-item> -->
     <el-menu-item index="/wall">大家说</el-menu-item>
     <el-menu-item index="/mylist">我的事件</el-menu-item>
@@ -20,7 +21,7 @@ export default {
   name: 'Nav',
   data () {
     return {
-      activeIndex: '/'
+      activeIndex: '/add'
     }
   },
   methods: {
@@ -32,5 +33,7 @@ export default {
 </script>
 
 <style scoped>
-
+.logo {
+  font-size: 30px;
+}
 </style>
