@@ -102,5 +102,5 @@ NasNoteBookContract.prototype = {
 }
 
 // testnet: n1qkfCyjnkmmCkxg7bWWkPGWVtbizZbovQr 1c101f24cf4d9d13946edc675cf31ba238c61eca147f576e3136f6a4770c9bb0
-// mainnet: n1zAnxSTcextSoeqxp6zH1YUhQ5ZUgre2BA
+// mainnet: n1jey5j83MFD51jiZsaosDUgUSt6BYRG46F 91d99d42d655e0668ebc2503fc8987b157baee145ba155ab0d75baebd16ce646
 module.exports = NasNoteBookContract;

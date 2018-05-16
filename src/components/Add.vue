@@ -55,7 +55,7 @@ export default {
         // set listener for extension transaction result
         listener: (resp) => {
           console.log('getUserName: ', JSON.stringify(resp))
-          this.userName = resp.result || ''
+          this.userName = JSON.parse(resp.result) || ''
         }
       })
     },

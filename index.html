@@ -8,14 +8,14 @@
   <body>
     <div id="app"></div>
 
-    <script src="static/nebPay.js"></script>
-    <script src="static/nebulas.js"></script>
+    <script src="./static/nebPay.js"></script>
+    <script src="./static/nebulas.js"></script>
     <script type="text/javascript">
       "use strict";
 
-      var IS_TESTNET = true;
+      var IS_TESTNET = false;
 
-      var dappAddress = IS_TESTNET ? 'n1qkfCyjnkmmCkxg7bWWkPGWVtbizZbovQr' : 'n1zAnxSTcextSoeqxp6zH1YUhQ5ZUgre2BA';
+      var dappAddress = IS_TESTNET ? 'n1qkfCyjnkmmCkxg7bWWkPGWVtbizZbovQr' : 'n1jey5j83MFD51jiZsaosDUgUSt6BYRG46F';
 
       var nebulas = require("nebulas"),
           Account = nebulas.Account,
