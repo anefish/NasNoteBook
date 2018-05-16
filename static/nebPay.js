@@ -1,13 +1,49 @@
 require=(function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 "use strict";
 
-var payUrl = "https://pay.nebulas.io/api/pay";
+var isChrome = function () {
+    if (typeof window !== "undefined") {
+        var userAgent = navigator.userAgent.toLowerCase();
+        if (userAgent.match(/chrome\/([\d\.]+)/)) {
+            return true;
+        }
+    }
+    return false;
+};
+
+var randomCode = function (len) {
+    var d,
+        e,
+        b = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
+        c = "";
+    for (d = 0; len > d; d += 1) {
+        e = Math.random() * b.length;
+        e = Math.floor(e);
+        c += b.charAt(e);
+    }
+    return c;
+};
 
 module.exports = {
-    payUrl: payUrl
+    isChrome: isChrome,
+    randomCode: randomCode
 };
 
 },{}],2:[function(require,module,exports){
+"use strict";
+
+//var payUrl = "https://pay.nebulas.io/api/pay"; //
+
+var mainnetUrl = "https://pay.nebulas.io/api/mainnet/pay",
+    testnetUrl = "https://pay.nebulas.io/api/pay";
+
+module.exports = {
+    //payUrl: payUrl,
+    mainnetUrl: mainnetUrl,
+    testnetUrl: testnetUrl
+};
+
+},{}],3:[function(require,module,exports){
 "use strict";
 
 var callbackMap = {};
@@ -43,7 +79,7 @@ window.addEventListener('message', function (resp) {
 
 module.exports = openExtension;
 
-},{}],3:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 "use strict";
 
 var get = function (url, body) {
@@ -91,14 +127,14 @@ module.exports = {
     request: request
 };
 
-},{}],4:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 "use strict";
 
 var BigNumber = require("bignumber.js");
 
-var Utils = require("./utils");
+var Utils = require("./Utils");
 var QRCode = require("./qrcode");
-var Config = require("./config");
+//var Config = require("./config");
 
 var openExtension = require("./extensionUtils.js");
 
@@ -164,7 +200,7 @@ function showQRCode(params, options) {
 
 module.exports = Pay;
 
-},{"./config":1,"./extensionUtils.js":2,"./qrcode":5,"./utils":6,"bignumber.js":7}],5:[function(require,module,exports){
+},{"./Utils":1,"./extensionUtils.js":3,"./qrcode":6,"bignumber.js":7}],6:[function(require,module,exports){
 "use strict";
 
 var QRCode = require('qrcode');
@@ -245,36 +281,7 @@ module.exports = {
 	showQRCode: showQRCode
 };
 
-},{"qrcode":12}],6:[function(require,module,exports){
-"use strict";
-
-var isChrome = function () {
-    if (typeof window !== "undefined") {
-        var userAgent = navigator.userAgent.toLowerCase();
-        if (userAgent.match(/chrome\/([\d\.]+)/)) {
-            return true;
-        }
-    }
-    return false;
-};
-
-var randomCode = function (len) {
-    var d,
-        e,
-        b = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
-        c = "";
-    for (d = 0; len > d; d += 1) {
-        e = Math.random() * b.length, e = Math.floor(e), c += b.charAt(e);
-    }
-    return c;
-};
-
-module.exports = {
-    isChrome: isChrome,
-    randomCode: randomCode
-};
-
-},{}],7:[function(require,module,exports){
+},{"qrcode":11}],7:[function(require,module,exports){
 /*! bignumber.js v5.0.0 https://github.com/MikeMcl/bignumber.js/LICENCE */
 
 ;(function (globalObj) {
@@ -3279,13 +3286,6 @@ module.exports = function extend() {
 };
 
 },{}],11:[function(require,module,exports){
-var toString = {}.toString;
-
-module.exports = Array.isArray || function (arr) {
-  return toString.call(arr) == '[object Array]';
-};
-
-},{}],12:[function(require,module,exports){
 var canPromise = require('can-promise')
 var QRCode = require('./core/qrcode')
 var CanvasRenderer = require('./renderer/canvas')
@@ -3361,7 +3361,7 @@ exports.toString = renderCanvas.bind(null, function (data, _, opts) {
   return SvgRenderer.render(data, opts)
 })
 
-},{"./core/qrcode":28,"./renderer/canvas":34,"./renderer/svg-tag.js":35,"can-promise":8}],13:[function(require,module,exports){
+},{"./core/qrcode":27,"./renderer/canvas":33,"./renderer/svg-tag.js":34,"can-promise":8}],12:[function(require,module,exports){
 /**
  * Alignment pattern are fixed reference pattern in defined positions
  * in a matrix symbology, which enables the decode software to re-synchronise
@@ -3446,7 +3446,7 @@ exports.getPositions = function getPositions (version) {
   return coords
 }
 
-},{"./utils":32}],14:[function(require,module,exports){
+},{"./utils":31}],13:[function(require,module,exports){
 var Mode = require('./mode')
 
 /**
@@ -3507,7 +3507,7 @@ AlphanumericData.prototype.write = function write (bitBuffer) {
 
 module.exports = AlphanumericData
 
-},{"./mode":25}],15:[function(require,module,exports){
+},{"./mode":24}],14:[function(require,module,exports){
 function BitBuffer () {
   this.buffer = []
   this.length = 0
@@ -3546,7 +3546,7 @@ BitBuffer.prototype = {
 
 module.exports = BitBuffer
 
-},{}],16:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 var Buffer = require('../utils/buffer')
 
 /**
@@ -3617,7 +3617,7 @@ BitMatrix.prototype.isReserved = function (row, col) {
 
 module.exports = BitMatrix
 
-},{"../utils/buffer":37}],17:[function(require,module,exports){
+},{"../utils/buffer":36}],16:[function(require,module,exports){
 var Buffer = require('../utils/buffer')
 var Mode = require('./mode')
 
@@ -3646,7 +3646,7 @@ ByteData.prototype.write = function (bitBuffer) {
 
 module.exports = ByteData
 
-},{"../utils/buffer":37,"./mode":25}],18:[function(require,module,exports){
+},{"../utils/buffer":36,"./mode":24}],17:[function(require,module,exports){
 var ECLevel = require('./error-correction-level')
 
 var EC_BLOCKS_TABLE = [
@@ -3783,7 +3783,7 @@ exports.getTotalCodewordsCount = function getTotalCodewordsCount (version, error
   }
 }
 
-},{"./error-correction-level":19}],19:[function(require,module,exports){
+},{"./error-correction-level":18}],18:[function(require,module,exports){
 exports.L = { bit: 1 }
 exports.M = { bit: 0 }
 exports.Q = { bit: 3 }
@@ -3835,7 +3835,7 @@ exports.from = function from (value, defaultValue) {
   }
 }
 
-},{}],20:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 var getSymbolSize = require('./utils').getSymbolSize
 var FINDER_PATTERN_SIZE = 7
 
@@ -3859,7 +3859,7 @@ exports.getPositions = function getPositions (version) {
   ]
 }
 
-},{"./utils":32}],21:[function(require,module,exports){
+},{"./utils":31}],20:[function(require,module,exports){
 var Utils = require('./utils')
 
 var G15 = (1 << 10) | (1 << 8) | (1 << 5) | (1 << 4) | (1 << 2) | (1 << 1) | (1 << 0)
@@ -3890,7 +3890,7 @@ exports.getEncodedBits = function getEncodedBits (errorCorrectionLevel, mask) {
   return ((data << 10) | d) ^ G15_MASK
 }
 
-},{"./utils":32}],22:[function(require,module,exports){
+},{"./utils":31}],21:[function(require,module,exports){
 var Buffer = require('../utils/buffer')
 
 var EXP_TABLE = new Buffer(512)
@@ -3964,7 +3964,7 @@ exports.mul = function mul (x, y) {
   return EXP_TABLE[LOG_TABLE[x] + LOG_TABLE[y]]
 }
 
-},{"../utils/buffer":37}],23:[function(require,module,exports){
+},{"../utils/buffer":36}],22:[function(require,module,exports){
 var Mode = require('./mode')
 var Utils = require('./utils')
 
@@ -4020,7 +4020,7 @@ KanjiData.prototype.write = function (bitBuffer) {
 
 module.exports = KanjiData
 
-},{"./mode":25,"./utils":32}],24:[function(require,module,exports){
+},{"./mode":24,"./utils":31}],23:[function(require,module,exports){
 /**
  * Data mask pattern reference
  * @type {Object}
@@ -4256,7 +4256,7 @@ exports.getBestMask = function getBestMask (data, setupFormatFunc) {
   return bestPattern
 }
 
-},{}],25:[function(require,module,exports){
+},{}],24:[function(require,module,exports){
 var Version = require('./version')
 var Regex = require('./regex')
 
@@ -4425,7 +4425,7 @@ exports.from = function from (value, defaultValue) {
   }
 }
 
-},{"./regex":30,"./version":33}],26:[function(require,module,exports){
+},{"./regex":29,"./version":32}],25:[function(require,module,exports){
 var Mode = require('./mode')
 
 function NumericData (data) {
@@ -4470,7 +4470,7 @@ NumericData.prototype.write = function write (bitBuffer) {
 
 module.exports = NumericData
 
-},{"./mode":25}],27:[function(require,module,exports){
+},{"./mode":24}],26:[function(require,module,exports){
 var Buffer = require('../utils/buffer')
 var GF = require('./galois-field')
 
@@ -4536,7 +4536,7 @@ exports.generateECPolynomial = function generateECPolynomial (degree) {
   return poly
 }
 
-},{"../utils/buffer":37,"./galois-field":22}],28:[function(require,module,exports){
+},{"../utils/buffer":36,"./galois-field":21}],27:[function(require,module,exports){
 var Buffer = require('../utils/buffer')
 var Utils = require('./utils')
 var ECLevel = require('./error-correction-level')
@@ -5037,7 +5037,7 @@ exports.create = function create (data, options) {
   return createSymbol(data, version, errorCorrectionLevel, mask)
 }
 
-},{"../utils/buffer":37,"./alignment-pattern":13,"./bit-buffer":15,"./bit-matrix":16,"./error-correction-code":18,"./error-correction-level":19,"./finder-pattern":20,"./format-info":21,"./mask-pattern":24,"./mode":25,"./reed-solomon-encoder":29,"./segments":31,"./utils":32,"./version":33,"isarray":11}],29:[function(require,module,exports){
+},{"../utils/buffer":36,"./alignment-pattern":12,"./bit-buffer":14,"./bit-matrix":15,"./error-correction-code":17,"./error-correction-level":18,"./finder-pattern":19,"./format-info":20,"./mask-pattern":23,"./mode":24,"./reed-solomon-encoder":28,"./segments":30,"./utils":31,"./version":32,"isarray":37}],28:[function(require,module,exports){
 var Buffer = require('../utils/buffer')
 var Polynomial = require('./polynomial')
 
@@ -5098,7 +5098,7 @@ ReedSolomonEncoder.prototype.encode = function encode (data) {
 
 module.exports = ReedSolomonEncoder
 
-},{"../utils/buffer":37,"./polynomial":27}],30:[function(require,module,exports){
+},{"../utils/buffer":36,"./polynomial":26}],29:[function(require,module,exports){
 var numeric = '[0-9]+'
 var alphanumeric = '[A-Z $%*+\\-./:]+'
 var kanji = '(?:[u3000-u303F]|[u3040-u309F]|[u30A0-u30FF]|' +
@@ -5131,7 +5131,7 @@ exports.testAlphanumeric = function testAlphanumeric (str) {
   return TEST_ALPHANUMERIC.test(str)
 }
 
-},{}],31:[function(require,module,exports){
+},{}],30:[function(require,module,exports){
 var Mode = require('./mode')
 var NumericData = require('./numeric-data')
 var AlphanumericData = require('./alphanumeric-data')
@@ -5463,7 +5463,7 @@ exports.rawSplit = function rawSplit (data) {
   )
 }
 
-},{"./alphanumeric-data":14,"./byte-data":17,"./kanji-data":23,"./mode":25,"./numeric-data":26,"./regex":30,"./utils":32,"dijkstrajs":9}],32:[function(require,module,exports){
+},{"./alphanumeric-data":13,"./byte-data":16,"./kanji-data":22,"./mode":24,"./numeric-data":25,"./regex":29,"./utils":31,"dijkstrajs":9}],31:[function(require,module,exports){
 var toSJISFunction
 var CODEWORDS_COUNT = [
   0, // Not used
@@ -5528,7 +5528,7 @@ exports.toSJIS = function toSJIS (kanji) {
   return toSJISFunction(kanji)
 }
 
-},{}],33:[function(require,module,exports){
+},{}],32:[function(require,module,exports){
 var Utils = require('./utils')
 var ECCode = require('./error-correction-code')
 var ECLevel = require('./error-correction-level')
@@ -5703,7 +5703,7 @@ exports.getEncodedBits = function getEncodedBits (version) {
   return (version << 12) | d
 }
 
-},{"./error-correction-code":18,"./error-correction-level":19,"./mode":25,"./utils":32,"isarray":11}],34:[function(require,module,exports){
+},{"./error-correction-code":17,"./error-correction-level":18,"./mode":24,"./utils":31,"isarray":37}],33:[function(require,module,exports){
 var Utils = require('./utils')
 
 function clearCanvas (ctx, canvas, size) {
@@ -5768,7 +5768,7 @@ exports.renderToDataURL = function renderToDataURL (qrData, canvas, options) {
   return canvasEl.toDataURL(type, rendererOpts.quality)
 }
 
-},{"./utils":36}],35:[function(require,module,exports){
+},{"./utils":35}],34:[function(require,module,exports){
 var Utils = require('./utils')
 
 function getColorAttrib (color, attrib) {
@@ -5851,7 +5851,7 @@ exports.render = function render (qrData, options, cb) {
   return svgTag
 }
 
-},{"./utils":36}],36:[function(require,module,exports){
+},{"./utils":35}],35:[function(require,module,exports){
 function hex2rgba (hex) {
   if (typeof hex !== 'string') {
     throw new Error('Color should be defined as hex string')
@@ -5946,7 +5946,7 @@ exports.qrToImageData = function qrToImageData (imgData, qr, opts) {
   }
 }
 
-},{}],37:[function(require,module,exports){
+},{}],36:[function(require,module,exports){
 /**
  * Implementation of a subset of node.js Buffer methods for the browser.
  * Based on https://github.com/feross/buffer
@@ -6460,7 +6460,14 @@ Buffer.isBuffer = function isBuffer (b) {
 
 module.exports = Buffer
 
-},{"isarray":11}],38:[function(require,module,exports){
+},{"isarray":37}],37:[function(require,module,exports){
+var toString = {}.toString;
+
+module.exports = Array.isArray || function (arr) {
+  return toString.call(arr) == '[object Array]';
+};
+
+},{}],38:[function(require,module,exports){
 (function (global){
 'use strict'
 module.exports = (typeof self === 'object' && self.self === self && self) ||
@@ -6484,6 +6491,8 @@ var NebPay = function (appKey, appSecret) {
 	this._pay = new Pay(appKey, appSecret);
 };
 
+NebPay.config = config;
+
 var defaultOptions = {
 	goods: {
 		name: "",
@@ -6495,10 +6504,14 @@ var defaultOptions = {
 		showQRCode: false,
 		container: undefined
 	},
+
 	// callback is the return url after payment
-	callback: config.payUrl,
+	//callback: config.payUrl,
+	callback: config.mainnetUrl,
+
 	//listener：specify a listener function to handle payment feedback message(only valid for browser extension)
 	listener: undefined,
+
 	// if use nrc20pay ,should input nrc20 params like address, name, symbol, decimals
 	nrc20: undefined
 };
@@ -6550,20 +6563,24 @@ NebPay.prototype = {
 		return this._pay.submit(NAS, to, value, payload, options);
 	},
 	simulateCall: function (to, value, func, args, options) {
+		//this API will not be supported in the future
 		var payload = {
 			type: "simulateCall",
 			function: func,
 			args: args
 		};
 		options = extend(defaultOptions, options);
+
 		return this._pay.submit(NAS, to, value, payload, options);
 	},
-	queryPayInfo: function (serialNumber) {
-		var url = config.payUrl + "/query?payId=" + serialNumber;
+	queryPayInfo: function (serialNumber, options) {
+		//var url = config.payUrl + "/query?payId=" + serialNumber;
+		options = extend(defaultOptions, options);
+		var url = options.callback + "/query?payId=" + serialNumber;
 		return http.get(url);
 	}
 };
 
 module.exports = NebPay;
 
-},{"./libs/config":1,"./libs/http":3,"./libs/pay":4,"bignumber.js":7,"extend":10}]},{},[]);
+},{"./libs/config":2,"./libs/http":4,"./libs/pay":5,"bignumber.js":7,"extend":10}]},{},[]);

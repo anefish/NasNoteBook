@@ -21,7 +21,7 @@
 
     <el-steps direction="vertical" :active="1" space="120px" class="records">
       <el-step v-for="item in myRecords" :title="dateFormat(item.createTime) + ' ('+ isOpenRaw(item.isOpen) +')'" :description="item.content"
-        :status="item.isOpen ? 'process': 'wait'" :key="item.createTime"></el-step>
+        :status="item.isOpen ? 'finish': 'process'" :key="item.createTime"></el-step>
     </el-steps>
   </div>
 </template>
@@ -77,7 +77,7 @@ export default {
         //   desc: "test goods"
         // },
 
-        // callback: NebPay.config.testnetUrl, //测试网，默认主网
+        callback: window.IS_TESTNET ? window.NebPay.config.testnetUrl : window.NebPay.config.mainnetUrl,
 
         // set listener for extension transaction result
         listener: this.listener

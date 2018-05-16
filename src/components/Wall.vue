@@ -1,10 +1,4 @@
 <template>
-  <!-- <el-carousel :interval="4000" type="card" height="600px">
-    <el-carousel-item v-for="item in 6" :key="item">
-      <h3>{{ item }}</h3>
-    </el-carousel-item>
-  </el-carousel> -->
-
   <el-table
     :show-header="false"
     :data="tableData"
@@ -16,11 +10,13 @@
         {{dateFormat(scope.row.createTime)}}
       </template>
     </el-table-column>
-    <!-- <el-table-column
-      prop="name"
+    <el-table-column
       label="姓名"
       width="180">
-    </el-table-column> -->
+      <template slot-scope="scope">
+        {{scope.row.userName || '无名氏'}}
+      </template>
+    </el-table-column>
     <el-table-column
       prop="content"
       label="内容">
@@ -81,7 +77,7 @@ export default {
 
       window.neb.api.call(from, window.dappAddress, value, nonce, gasPrice, gasLimit, contract).then(function (resp) {
         console.log('resp------------------->>>: ', JSON.parse(resp.result))
-        _this.tableData = JSON.parse(resp.result)
+        _this.tableData = JSON.parse(resp.result).reverse()
       }).catch(function (err) {
         console.log('error: ', err.message)
       })
@@ -90,20 +86,11 @@ export default {
 }
 </script>
 
-<style scoped>
-.el-carousel__item h3 {
-  color: #475669;
-  font-size: 14px;
-  opacity: 0.75;
-  line-height: 200px;
-  margin: 0;
+<style>
+.el-table th, .el-table tr {
+    background-color: #ebeef5;
 }
-
-.el-carousel__item:nth-child(2n) {
-  background-color: #99a9bf;
-}
-
-.el-carousel__item:nth-child(2n+1) {
-  background-color: #d3dce6;
+.el-table td, .el-table th.is-leaf {
+    border-bottom: 1px solid #fff;
 }
 </style>
