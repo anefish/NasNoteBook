@@ -30,6 +30,7 @@ GuessItem.prototype = {
 
 var RewardGuessContract = function () {
   LocalContractStorage.defineProperties(this, {
+    owner: null,
     unit: null, // 单位奖励（比如 0.01 nas）
     guessUnits: null, // 参与竞猜支付单位数
     size: null, // 竞猜项目总数
@@ -53,13 +54,38 @@ var RewardGuessContract = function () {
 
 RewardGuessContract.prototype = {
   init: function () {
+    this.owner = Blockchain.transaction.from;
     this.unit = new BigNumber(0.01);
     this.guessUnits = new BigNumber(2);
     this.size = new BigNumber(0);
     this.beRewardSize = new BigNumber(0);
   },
 
-  test: function () {
+  withdraw: function (address, value) {
+    value = new BigNumber(value);
+
+    var valid = Blockchain.verifyAddress(address);
+    if (!valid) {
+      throw new Error("Invalid address!");
+    }
+
+    var from = Blockchain.transaction.from;
+    if (!from.eq(this.owner)) {
+      throw new Error("Unauthorized operation!");
+    }
+
+    // 转账提款
+    var result = Blockchain.transfer(address, value);
+    if (!result) {
+      throw new Error("transfer failed.");
+    }
+    Event.Trigger("RewardGuessContract", {
+      Transfer: {
+        from: Blockchain.transaction.to,
+        to: address,
+        value: value.toString()
+      }
+    });
   },
 
   // 发起竞猜
@@ -185,4 +211,5 @@ RewardGuessContract.prototype = {
   }
 };
 
+// testnet: n1qWAJS3vvhNu6xL919jD6DutguBW4NQ5np 7efddbd62c251e78bd6bd34d8b4a20ae31f2c0ce595477cd13835755ac229609
 module.exports = RewardGuessContract;
