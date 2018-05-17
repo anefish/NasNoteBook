@@ -3,6 +3,7 @@
 var GuessItem = function (text) {
   if (text) {
     var obj = JSON.parse(text);
+    this.index = obj.index; // 编号
     this.from = obj.from; // 发起者地址
     this.rewardUnits = obj.rewardUnits; //奖励总单位数/竞猜选项个数（5-10）
     this.rightNum = obj.rightNum; // 正确答案数字
@@ -10,6 +11,7 @@ var GuessItem = function (text) {
     this.beReward = obj.beReward; //是否已付奖励(本轮结束)
     this.winner = obj.winner; // 赢家地址
   } else {
+    this.index = "";
     this.from = "";
     this.rewardUnits = new BigNumber(0);
     this.rightNum = new BigNumber(0);
@@ -26,13 +28,11 @@ GuessItem.prototype = {
 };
 
 
-
 var RewardGuessContract = function () {
   LocalContractStorage.defineProperties(this, {
     unit: null, // 单位奖励（比如 0.01 nas）
     guessUnits: null, // 参与竞猜支付单位数
     size: null, // 竞猜项目总数
-    unRewardSize: null, // 未结束项目数
     beRewardSize: null // 已结束项目数
   });
 
@@ -46,8 +46,8 @@ var RewardGuessContract = function () {
   });
 
   LocalContractStorage.defineMapProperties(this,{
-    unRewardMap: null,
-    beRewardMap: null
+    beRewardMap: null, // index: Index (index => beRewardSize)
+    beRewardKeys: null // Index: true (Index => size)
   });
 };
 
@@ -56,13 +56,10 @@ RewardGuessContract.prototype = {
     this.unit = new BigNumber(0.01);
     this.guessUnits = new BigNumber(2);
     this.size = new BigNumber(0);
-    this.unRewardSize = new BigNumber(0);
     this.beRewardSize = new BigNumber(0);
   },
 
   test: function () {
-    var obj = {a:1,b:2,c:3};
-    return Obj.keys(obj);
   },
 
   // 发起竞猜
@@ -81,6 +78,7 @@ RewardGuessContract.prototype = {
     var rightNum = parseInt(Math.random().times(rewardUnits)).plus(new BigNumber(1));
 
     var guessItem = new GuessItem();
+    guessItem.index = this.size;
     guessItem.from = from;
     guessItem.rewardUnits = rewardUnits;
     guessItem.rightNum = rightNum;
@@ -88,8 +86,6 @@ RewardGuessContract.prototype = {
     var index = this.size;
     this.allGuessMap.set(index, guessItem);
     this.size = this.size.plus(new BigNumber(1));
-
-    // TODO:
   },
 
   // 参与竞猜
@@ -110,13 +106,82 @@ RewardGuessContract.prototype = {
     }
 
     guessItem.guessCount = guessItem.guessCount.plus(new BigNumber(1));
+
     if (guessNum.eq(guessItem.rightNum)) { // 猜中
       guessItem.beReward = true;
       guessItem.winner = from;
-      // TODO: 支付奖励
+
+      var index = this.beRewardSize;
+      this.beRewardMap.set(index, guessIndex);
+      this.beRewardKeys.set(guessIndex, true);
+      this.beRewardSize = this.beRewardSize.plus(new BigNumber(1));
+
+      // 支付奖励
+      var winner = from;
+      var creater = guessItem.from;
+      var winnerRewardAmount = this.unit.times(guessItem.rewardUnits);
+      var createrRewardAmount = this.unit.times(this.guessUnits).times(guessItem.guessCount);
+      // 手续费
+      if (createrRewardAmount > winnerRewardAmount) {
+        createrRewardAmount = createrRewardAmount.times(new BigNumber(0.95));
+      }
+      winnerRewardAmount = winnerRewardAmount.times(new BigNumber(0.95));
+
+      // 支付发起者奖励
+      var result1 = Blockchain.transfer(creater, createrRewardAmount);
+      if (!result1) {
+        throw new Error("transfer failed.");
+      }
+      Event.Trigger("RewardGuessContract", {
+        Transfer: {
+          from: Blockchain.transaction.to,
+          to: creater,
+          value: createrRewardAmount.toString()
+        }
+      });
+
+      // 支付猜中者奖励
+      var result2 = Blockchain.transfer(winner, winnerRewardAmount);
+      if (!result2) {
+        throw new Error("transfer failed.");
+      }
+      Event.Trigger("RewardGuessContract", {
+        Transfer: {
+          from: Blockchain.transaction.to,
+          to: winner,
+          value: winnerRewardAmount.toString()
+        }
+      });
+
     }
 
     this.allGuessMap.set(guessIndex, guessItem);
+  },
+
+  // 查询正在竞猜
+  getUnRewardGuess: function () {
+    var unRewardGuess = [];
+    for (var i = 0; i < this.size; i++) {
+      if (!this.beRewardKeys.get(i)) {
+        var guessItem = this.allGuessMap.get(i);
+        unRewardGuess.push(guessItem);
+      }
+    }
+
+    return unRewardGuess;
+  },
+
+  // 查询往期竞猜
+  getBeRewardGuess: function (len) {
+    len = parseInt(new BigNumber(len));
+    var beRewardGuess = [];
+    for (var i = 0; i < len; i++) {
+      var index = this.beRewardMap.get(this.beRewardSize - 1 - i);
+      var guessItem = this.allGuessMap.get(index);
+      beRewardGuess.push(guessItem);
+    }
+
+    return beRewardGuess;
   }
 };
 
