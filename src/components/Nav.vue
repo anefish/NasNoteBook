@@ -21,7 +21,16 @@ export default {
   name: 'Nav',
   data () {
     return {
-      activeIndex: '/add'
+    }
+  },
+  computed: {
+    activeIndex () {
+      return '/' + this.$route.path.split('/')[1]
+    }
+  },
+  watch: {
+    '$route' (to, from) {
+      return '/' + to.path.split('/')[1]
     }
   },
   methods: {

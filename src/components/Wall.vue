@@ -1,5 +1,6 @@
 <template>
   <el-table
+    v-show="tableData.length > 0"
     :show-header="false"
     :data="tableData"
     style="width: 100%">
